@@ -4,9 +4,9 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-mark class="block h-9 w-auto" />
+                <div class="shrink-0 flex items-center" style="width: 30%;">
+                    <a href="{{ route('home') }}">
+                        <img src="https://alextheory.it/cdn/shop/files/Parola_di_Alex_Theory_-_LogoRisorsa_3_500x105.png?v=1668008855" alt="Feature 2">
                     </a>
                 </div>
 

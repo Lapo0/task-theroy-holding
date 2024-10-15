@@ -6,7 +6,8 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
+
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');

@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Http\Controllers\PostController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,4 +31,15 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+    
+    Route::resource('posts', PostController::class);
+
+    Route::post('posts/{post}/like', [PostController::class, 'toggleLike'])->name('posts.like');
+    Route::post('posts/{post}/save', [PostController::class, 'toggleSave'])->name('posts.save');
+
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 });
+
+

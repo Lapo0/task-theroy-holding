@@ -15,14 +15,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Owl Carousel CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
 
     <!-- AOS CSS for Animations -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
 
     <!-- Animate.css for Additional Animations -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <!-- Custom Styles -->
     <style>
@@ -149,6 +151,7 @@
                 opacity: 0;
                 transform: translate(-50%, -60%);
             }
+
             to {
                 opacity: 1;
                 transform: translate(-50%, -50%);
@@ -160,6 +163,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -179,7 +183,7 @@
 
         /* Testimonianze */
         .testimonial {
-            background-color: #f8f9fa;
+            background-color: #d6d6d60f;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -251,20 +255,25 @@
     <div class="carousel-wrapper">
         <div class="owl-carousel owl-theme">
             <div class="item-t">
-                <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/t/2/assets/alextheorylab037-1-1664902095524.webp?v=1664902096" alt="Slide 1">
+                <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/t/2/assets/alextheorylab037-1-1664902095524.webp?v=1664902096"
+                    alt="Slide 1">
             </div>
             <div class="item-t">
-                <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/t/2/assets/alextheorylab018-1664921938386.webp?v=1664921940" alt="Slide 2">
+                <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/t/2/assets/alextheorylab018-1664921938386.webp?v=1664921940"
+                    alt="Slide 2">
             </div>
             <div class="item-t">
-                <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/t/2/assets/alextheorylabtconricoperteconfronto4015--edited-1665008614905.jpg?v=1665008617" alt="Slide 3">
+                <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/t/2/assets/alextheorylabtconricoperteconfronto4015--edited-1665008614905.jpg?v=1665008617"
+                    alt="Slide 3">
             </div>
         </div>
 
         <!-- Testo Centrato con Animazione -->
         <div class="centered-text">
-            <h1 class="animate__animated animate__fadeInUp">Benvenuto nel Nostro Progetto</h1>
-            <p class="animate__animated animate__fadeInUp animate__delay-1s">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <h1 style="opacity: 0; transition: opacity 1s ease-in; animation: fadeIn 1s forwards;">Benvenuto nel Nostro
+                Progetto</h1>
+            <p style="opacity: 0; transition: opacity 1s ease-in 1s; animation: fadeIn 1s 1s forwards;">Lorem ipsum
+                dolor sit amet, consectetur adipiscing elit.</p>
             <a href="#about" class="animate__animated animate__fadeInUp animate__delay-2s">Scopri di più</a>
         </div>
     </div>
@@ -274,12 +283,15 @@
         <div class="container" data-aos="fade-up">
             <div class="row align-items-center">
                 <div class="col-md-6" data-aos="fade-right">
-                    <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/t/2/assets/alextheorygallette096-1665008139658.webp?v=1665008171" alt="Chi Siamo" class="img-fluid rounded shadow">
+                    <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/t/2/assets/alextheorygallette096-1665008139658.webp?v=1665008171"
+                        alt="Chi Siamo" class="img-fluid rounded shadow">
                 </div>
                 <div class="col-md-6 mt-5 mt-md-0">
                     <h2 class="mb-4">Chi Siamo</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel purus at quam dignissim placerat.</p>
-                    <p>Aliquam erat volutpat. Integer nec tortor eu lectus consectetur commodo. Morbi euismod, justo a tincidunt dictum, sapien erat elementum urna, at posuere ligula ligula nec metus.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel purus at quam dignissim
+                        placerat.</p>
+                    <p>Aliquam erat volutpat. Integer nec tortor eu lectus consectetur commodo. Morbi euismod, justo a
+                        tincidunt dictum, sapien erat elementum urna, at posuere ligula ligula nec metus.</p>
                     <a href="#" class="text-danger fw-bold">Leggi di più</a>
                 </div>
             </div>
@@ -292,17 +304,20 @@
             <h2 class="text-center mb-5">Le Nostre Caratteristiche</h2>
             <div class="row">
                 <div class="col-md-4 mb-4 text-center" data-aos="zoom-in">
-                    <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/t/24/assets/mega-menu-120077-mais-paprika0b60f145-9bc3-4e72-9b68-4b6f89c3feea-1-99957533_320x.jpg?v=1694178854" alt="Feature 1" class="mb-3">
+                    <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/t/24/assets/mega-menu-120077-mais-paprika0b60f145-9bc3-4e72-9b68-4b6f89c3feea-1-99957533_320x.jpg?v=1694178854"
+                        alt="Feature 1" class="mb-3">
                     <h4>Feature 1</h4>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                 </div>
                 <div class="col-md-4 mb-4 text-center" data-aos="zoom-in" data-aos-delay="100">
-                    <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/t/24/assets/mega-menu-120077-gallettasemplice-5150-1371361326_320x.jpg?v=1698055803" alt="Feature 2" class="mb-3">
+                    <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/t/24/assets/mega-menu-120077-gallettasemplice-5150-1371361326_320x.jpg?v=1698055803"
+                        alt="Feature 2" class="mb-3">
                     <h4>Feature 2</h4>
                     <p>Nulla vel purus at quam dignissim placerat.</p>
                 </div>
                 <div class="col-md-4 mb-4 text-center" data-aos="zoom-in" data-aos-delay="200">
-                    <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/t/24/assets/mega-menu-120077-lattenocciole-pila-1-1363037794_320x.jpg?v=1694178856" alt="Feature 3" class="mb-3">
+                    <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/t/24/assets/mega-menu-120077-lattenocciole-pila-1-1363037794_320x.jpg?v=1694178856"
+                        alt="Feature 3" class="mb-3">
                     <h4>Feature 3</h4>
                     <p>Sed vitae nisi a enim tincidunt fermentum.</p>
                 </div>
@@ -317,21 +332,24 @@
             <div class="owl-carousel owl-theme">
                 <div class="item">
                     <div class="testimonial text-center">
-                        <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/files/mega-menu-120077-deg-salata-deluxe-1193854528_320x.jpg?v=1714986903" alt="Testimonial 1">
+                        <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/files/mega-menu-120077-deg-salata-deluxe-1193854528_320x.jpg?v=1714986903"
+                            alt="Testimonial 1">
                         <h5 class="mt-3">Mario Rossi</h5>
                         <p class="mt-2">"Questo progetto ha superato le mie aspettative! Ottimo lavoro."</p>
                     </div>
                 </div>
                 <div class="item">
                     <div class="testimonial text-center">
-                        <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/files/mega-menu-120077-ciccio-premium-136015497_320x.jpg?v=1714986905" alt="Testimonial 2">
+                        <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/files/mega-menu-120077-ciccio-premium-136015497_320x.jpg?v=1714986905"
+                            alt="Testimonial 2">
                         <h5 class="mt-3">Luisa Bianchi</h5>
                         <p class="mt-2">"Un'esperienza fantastica, altamente raccomandata."</p>
                     </div>
                 </div>
                 <div class="item">
                     <div class="testimonial text-center">
-                        <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/files/mega-menu-120077-deg-dolce-deluxe-1147756102_320x.jpg?v=1714998662" alt="Testimonial 3">
+                        <img src="https://cdn.shopify.com/s/files/1/0619/9984/1467/files/mega-menu-120077-deg-dolce-deluxe-1147756102_320x.jpg?v=1714998662"
+                            alt="Testimonial 3">
                         <h5 class="mt-3">Giovanni Verdi</h5>
                         <p class="mt-2">"Supporto eccellente e risultati straordinari."</p>
                     </div>
@@ -393,7 +411,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="message" class="form-label">Messaggio</label>
-                            <textarea class="form-control" id="message" rows="5" placeholder="Il tuo messaggio"></textarea>
+                            <textarea class="form-control" id="message" rows="5"
+                                placeholder="Il tuo messaggio"></textarea>
                         </div>
                         <div class="text-center">
                             <button type="submit">Invia Messaggio</button>

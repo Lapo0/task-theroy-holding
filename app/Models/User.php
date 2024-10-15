@@ -10,6 +10,8 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -65,4 +67,45 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function savedPosts()
+    {
+        return $this->belongsToMany(Post::class, 'saved_posts');
+    }
+
+    public function updateProfilePhoto($photo)
+    {
+        tap($this->profile_photo_path, function ($previous) use ($photo) {
+            $filename = $photo->hashName();
+
+            // Salva la foto nel disk 'profile_photos'
+            $photo->storeAs('', $filename, 'profile_photos');
+
+            $this->forceFill([
+                'profile_photo_path' => $filename,
+            ])->save();
+
+            if ($previous) {
+                Storage::disk('profile_photos')->delete($previous);
+            }
+        });
+    }
+
+    public function getProfilePhotoUrlAttribute()
+    {
+        return $this->profile_photo_path
+            ? asset('profile-photos/' . $this->profile_photo_path)
+            : $this->defaultProfilePhotoUrl();
+    }
+
 }

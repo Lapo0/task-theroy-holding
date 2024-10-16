@@ -1,4 +1,4 @@
-# Laravel Livewire Jetstream Project
+# Laravel Livewire Jetstream Task-Theory-Holding
 
 ## Descrizione del Progetto
 Questo progetto, sviluppato con Laravel Livewire Jetstream, permette agli utenti di creare un profilo, interagire con altri utenti, e gestire i propri post. 
@@ -18,7 +18,6 @@ L'interfaccia del progetto presenta una schermata iniziale che introduce il sito
 ### Dashboard Utente
 - **Visualizzazione Attività**: Gli utenti possono visualizzare l'attività degli altri utenti nella dashboard.
 - **Gestione Post**:
-  - Gli utenti possono creare nuovi post direttamente dalla dashboard.
   - I post possono essere modificati o eliminati dall'utente proprietario in qualsiasi momento.
   - Gli utenti possono mettere "Mi piace" o salvare i post di altri utenti o i propri post.
   - I post possono essere filtrati per mostrare "Tutti i post", "Post che mi piacciono" o "Post salvati".
@@ -69,9 +68,3 @@ Per installare e utilizzare questo progetto, è necessario avere una configurazi
 - **Laravel**: Framework PHP utilizzato per la gestione del backend.
 - **Livewire**: Usato per creare interazioni dinamiche senza necessità di scrivere JavaScript.
 - **Jetstream**: Gestisce l'autenticazione e le funzionalità di gestione utente.
-
-## Contributi
-Sono ben accetti contributi per migliorare questo progetto. Puoi clonare il repository, creare un branch per la tua funzionalità o correzione e inviare una pull request.
-
-## Licenza
-Questo progetto è sotto licenza MIT. Vedi il file LICENSE per maggiori dettagli.

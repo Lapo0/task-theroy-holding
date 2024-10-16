@@ -14,7 +14,7 @@
     @section('content')
         <div class="container mx-auto px-4">
             <!-- Pulsanti di Filtro -->
-            <div class="mb-4 flex space-x-4">
+            <div class="mb-6 flex space-x-4 shadow-md rounded-lg overflow-hidden animate__animated animate__fadeInUp hover:shadow-xl transition-shadow duration-300" style="justify-content: space-around">
                 <a href="{{ route('dashboard', ['filter' => 'all']) }}"
                    class="btn-primary px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
                     Tutti i Post
@@ -33,7 +33,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach ($posts as $post)
                         <div class="bg-white p-4 shadow-md rounded-lg overflow-hidden animate__animated animate__fadeInUp hover:shadow-xl transition-shadow duration-300">
-                            <div class="flex items-center justify-between">
+                            <div class="flex items-center justify-between pb-2">
                                 <span class="text-sm font-semibold text-gray-800">{{ $post->user->name }}</span>
                                 <div class="flex items-center">
                                     <span class="h-3 w-3 rounded-full mr-2" style="

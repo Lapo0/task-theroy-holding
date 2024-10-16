@@ -33,11 +33,9 @@ class DashboardController extends Controller
             $posts = Post::with('user', 'likes')->orderBy('created_at', 'desc')->paginate(10);
         }
 
-        // Recupera le ultime attività di tutti gli utenti
-        $userSessions = \DB::table('sessions')
-            ->select('user_id', 'last_activity', 'ip_address', 'user_agent')
-            ->whereNotNull('user_id')
-            ->get();
+        // Recupera l'attività dell'unico utente essendo solo un ip visto sono in locale
+        $userSessions = \DB::table('sessions')->get()->keyBy(keyBy: 'user_id');
+
 
         return view('dashboard', compact('posts', 'userSessions', 'filter'));
     }

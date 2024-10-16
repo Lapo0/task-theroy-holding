@@ -6,7 +6,7 @@
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     @endpush
 
-    @section('content')
+    @section(section: 'content')
     <div class="container mx-auto px-4">
         <h1 class="pb-8" style="font-size: 3rem; text-align: center; font-weight: bolder;">LISTA DEI POST</h1>
         @if (session('success'))
@@ -22,26 +22,26 @@
                         class="bg-white p-4 shadow-md rounded-lg overflow-hidden animate__animated animate__fadeInUp hover:shadow-xl transition-shadow duration-300">
                         <div class="flex items-center justify-between m-2">
                             <span class="text-sm font-semibold text-gray-800">{{ $post->user->name }}</span>
-                            <div class="flex items-center">
+                            <div class="flex items-center pb-2">
                                 <span class="h-3 w-3 rounded-full mr-2" style="
-                                                            background-color: 
-                                                            @if ($last_activity)
-                                                                @php
-                                                                    $lastActivity = \Carbon\Carbon::createFromTimestamp($last_activity);
-                                                                    $now = \Carbon\Carbon::now();
-                                                                    $diffInHours = $lastActivity->diffInHours($now);
-                                                                @endphp
-                                                                @if ($diffInHours < 1)
-                                                                    green; /* Attivo ora */
-                                                                @elseif ($diffInHours < 24)
-                                                                    yellow; /* Attivo da meno di un giorno */
-                                                                @else
-                                                                    red; /* Inattivo da più di un giorno */
-                                                                @endif
-                                                            @else
-                                                                red; /* Nessuna attività */
-                                                            @endif
-                                                        ">
+                                                                    background-color: 
+                                                                    @if ($last_activity)
+                                                                                                                            @php
+                                                                                                                                $lastActivity = \Carbon\Carbon::createFromTimestamp($last_activity);
+                                                                                                                                $now = \Carbon\Carbon::now();
+                                                                                                                                $diffInHours = $lastActivity->diffInHours($now);
+                                                                                                                            @endphp
+                                                                                                                            @if ($diffInHours < 1)
+                                                                                                                                green; /* Attivo ora */
+                                                                                                                            @elseif ($diffInHours < 24)
+                                                                                                                                yellow; /* Attivo da meno di un giorno */
+                                                                                                                            @else
+                                                                                                                                red; /* Inattivo da più di un giorno */
+                                                                                                                            @endif
+                                                                    @else
+                                                                        red; /* Nessuna attività */
+                                                                    @endif
+                                                                ">
                                 </span>
                                 <span class="text-sm text-gray-500">
                                     @if ($last_activity)
@@ -64,9 +64,12 @@
                             <img src="{{ asset('post_images/' . $post->image) }}" alt="{{ $post->title }}"
                                 class="w-full object-cover" style="aspect-ratio: 1/1;">
                         @endif
-                        <div class="p-3">
-                            <h2 class="text-xl font-bold text-gray-800 mb-2">{{ $post->title }}</h2>
-                            <p class="text-gray-600 mb-4">{{ Str::limit($post->description, 100, '...') }}</p>
+                        <div class="p-3"
+                            style="display: flex; flex-direction: column; justify-content: space-between; height: 30vh;">
+                            <div>
+                                <h2 class="text-xl font-bold text-gray-800 mb-2">{{ $post->title }}</h2>
+                                <p class="text-gray-600 mb-4">{{ Str::limit($post->description, 100, '...') }}</p>
+                            </div>
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-2">
                                     <div class="flex items-center space-x-2">
@@ -143,58 +146,58 @@
     @endsection
 
     @push('scripts')
-    <script src="//unpkg.com/alpinejs" defer></script>
-    <script>
-        document.querySelectorAll('.like-button').forEach(button => {
-            button.addEventListener('click', function() {
-                const postId = this.closest('.like-form').getAttribute('data-post-id');
-                const isLiked = this.getAttribute('data-liked') === 'true';
+        <script src="//unpkg.com/alpinejs" defer></script>
+        <script>
+            document.querySelectorAll('.like-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const postId = this.closest('.like-form').getAttribute('data-post-id');
+                    const isLiked = this.getAttribute('data-liked') === 'true';
 
-                fetch(`/posts/${postId}/like`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ liked: !isLiked })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Aggiorna l'icona e il contatore
-                        this.querySelector('i').className = isLiked ? 'far fa-heart' : 'fas fa-heart';
-                        this.querySelector('.like-count').innerText = data.likeCount;
-                        this.setAttribute('data-liked', !isLiked);
-                    }
+                    fetch(`/posts/${postId}/like`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ liked: !isLiked })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Aggiorna l'icona e il contatore
+                                this.querySelector('i').className = isLiked ? 'far fa-heart' : 'fas fa-heart';
+                                this.querySelector('.like-count').innerText = data.likeCount;
+                                this.setAttribute('data-liked', !isLiked);
+                            }
+                        });
                 });
             });
-        });
 
-        document.querySelectorAll('.save-button').forEach(button => {
-            button.addEventListener('click', function() {
-                const postId = this.closest('.save-form').getAttribute('data-post-id');
-                const isSaved = this.getAttribute('data-saved') === 'true';
+            document.querySelectorAll('.save-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const postId = this.closest('.save-form').getAttribute('data-post-id');
+                    const isSaved = this.getAttribute('data-saved') === 'true';
 
-                fetch(`/posts/${postId}/save`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ saved: !isSaved })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Aggiorna l'icona e il testo
-                        this.querySelector('i').className = isSaved ? 'far fa-bookmark' : 'fas fa-bookmark';
-                        this.querySelector('.save-text').innerText = isSaved ? 'Salva' : 'Salvato';
-                        this.setAttribute('data-saved', !isSaved);
-                    }
+                    fetch(`/posts/${postId}/save`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ saved: !isSaved })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Aggiorna l'icona e il testo
+                                this.querySelector('i').className = isSaved ? 'far fa-bookmark' : 'fas fa-bookmark';
+                                this.querySelector('.save-text').innerText = isSaved ? 'Salva' : 'Salvato';
+                                this.setAttribute('data-saved', !isSaved);
+                            }
+                        });
                 });
             });
-        });
-    </script>
-@endpush
+        </script>
+    @endpush
 
 </x-app-layout>

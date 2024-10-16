@@ -11,12 +11,17 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Styles -->
     @livewireStyles
+
+    <!-- Stack for Additional Styles -->
+    @stack('styles')
 </head>
 
 <body class="font-sans antialiased">
@@ -38,11 +43,18 @@
         <main>
             {{ $slot }}
         </main>
+
+        <div class="container mx-auto py-8">
+            @yield('content')
+        </div>
     </div>
 
     @stack('modals')
 
     @livewireScripts
+
+    <!-- Stack for Additional Scripts -->
+    @stack('scripts')
 </body>
 
 </html>

@@ -14,10 +14,16 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::with('user', 'likes')
+            ->where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('posts.index', ['posts' => $posts]);
+        $session = \DB::table('sessions')->where('user_id', Auth::id())->first();
+
+        return view('posts.index', [
+            'posts' => $posts,
+            'last_activity' => $session ? $session->last_activity : null // Passa l'ultimo accesso alla vista
+        ]);
     }
 
     // Mostra il form per creare un nuovo post
@@ -42,8 +48,17 @@ class PostController extends Controller
 
         if ($request->hasFile('image')) {
             try {
-                $path = $request->file('image')->store('posts', 'public');
-                $post->image = $path;
+                // Genera una sottocartella basata sull'MD5 dell'ID utente
+                $userFolder = md5(Auth::id());
+
+                // Genera un nome univoco per l'immagine
+                $filename = time() . '_' . $request->file('image')->getClientOriginalName();
+
+                // Salva l'immagine nella sottocartella
+                $request->file('image')->storeAs($userFolder, $filename, 'post_images');
+
+                // Salva il percorso relativo nell'attributo 'image'
+                $post->image = $userFolder . '/' . $filename;
             } catch (\Exception $e) {
                 return back()->withErrors(['image' => 'Errore durante il caricamento dell\'immagine.'])->withInput();
             }
@@ -54,13 +69,6 @@ class PostController extends Controller
         return redirect()->route('posts.index')->with('success', 'Post creato con successo.');
     }
 
-    // Mostra un singolo post
-    public function show($id)
-    {
-        $post = Post::with('user', 'likes')->findOrFail($id);
-
-        return view('posts.show', compact('post'));
-    }
 
     // Mostra il form per modificare un post esistente
     public function edit($id)
@@ -71,7 +79,12 @@ class PostController extends Controller
             return redirect()->route('posts.index')->with('error', 'Non sei autorizzato a modificare questo post.');
         }
 
-        return view('posts.edit', compact('post'));
+        $session = \DB::table('sessions')->where('user_id', Auth::id())->first();
+
+        return view('posts.edit', [
+            'post' => $post,
+            'last_activity' => $session ? $session->last_activity : null
+        ]);
     }
 
     // Aggiorna un post esistente
@@ -95,12 +108,21 @@ class PostController extends Controller
         if ($request->hasFile('image')) {
             // Elimina l'immagine precedente se esiste
             if ($post->image) {
-                Storage::disk('public')->delete($post->image);
+                Storage::disk('post_images')->delete($post->image);
             }
 
             try {
-                $path = $request->file('image')->store('posts', 'public');
-                $post->image = $path;
+                // Genera una sottocartella basata sull'MD5 dell'ID utente
+                $userFolder = md5(Auth::id());
+
+                // Genera un nome univoco per la nuova immagine
+                $filename = time() . '_' . $request->file('image')->getClientOriginalName();
+
+                // Salva la nuova immagine nella sottocartella
+                $request->file('image')->storeAs($userFolder, $filename, 'post_images');
+
+                // Salva il percorso relativo nell'attributo 'image'
+                $post->image = $userFolder . '/' . $filename;
             } catch (\Exception $e) {
                 return back()->withErrors(['image' => 'Errore durante il caricamento dell\'immagine.'])->withInput();
             }
@@ -137,33 +159,33 @@ class PostController extends Controller
         $like = Like::where('user_id', Auth::id())->where('post_id', $id)->first();
 
         if ($like) {
-            // Se il "Mi piace" esiste, lo rimuove
             $like->delete();
         } else {
-            // Altrimenti, lo aggiunge
             Like::create([
                 'user_id' => Auth::id(),
                 'post_id' => $id,
             ]);
         }
 
-        return redirect()->back();
+        // Restituisci il conteggio dei "Mi piace"
+        $likeCount = $post->likes()->count();
+
+        return response()->json(['success' => true, 'likeCount' => $likeCount]);
     }
 
-    // Salva o rimuove un post dai salvati
     public function toggleSave($id)
     {
         $post = Post::findOrFail($id);
         $user = Auth::user();
 
         if ($user->savedPosts()->where('post_id', $id)->exists()) {
-            // Se il post è già salvato, lo rimuove
             $user->savedPosts()->detach($id);
         } else {
-            // Altrimenti, lo salva
             $user->savedPosts()->attach($id);
         }
 
-        return redirect()->back();
+        // Restituisci il risultato
+        return response()->json(['success' => true]);
     }
+
 }

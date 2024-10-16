@@ -1,17 +1,14 @@
-@extends('layouts.app')
+<x-app-layout>
 
-@push('styles')
-    <!-- Animate.css per Animazioni -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <!-- Tailwind CSS CDN (se non già incluso nel tuo progetto) -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</style>
-@endpush
+    @push('styles')
+        <!-- Animate.css per Animazioni -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    @endpush
 
-@section('content')
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-extrabold text-gray-800 mb-6 animate__animated animate__fadeInDown">Lista dei Post</h1>
-
+    @section('content')
+    <div class="container mx-auto px-4">
+        <h1 class="pb-8" style="font-size: 3rem; text-align: center; font-weight: bolder;">LISTA DEI POST</h1>
         @if (session('success'))
             <div class="bg-green-500 text-white p-4 rounded mb-6 animate__animated animate__fadeIn">
                 {{ session('success') }}
@@ -21,65 +18,95 @@
         @if($posts && $posts->count())
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ($posts as $post)
-                    <div class="bg-white shadow-md rounded-lg overflow-hidden animate__animated animate__fadeInUp hover:shadow-xl transition-shadow duration-300">
+                    <div
+                        class="bg-white p-4 shadow-md rounded-lg overflow-hidden animate__animated animate__fadeInUp hover:shadow-xl transition-shadow duration-300">
+                        <div class="flex items-center justify-between m-2">
+                            <span class="text-sm font-semibold text-gray-800">{{ $post->user->name }}</span>
+                            <div class="flex items-center">
+                                <span class="h-3 w-3 rounded-full mr-2" style="
+                                                            background-color: 
+                                                            @if ($last_activity)
+                                                                @php
+                                                                    $lastActivity = \Carbon\Carbon::createFromTimestamp($last_activity);
+                                                                    $now = \Carbon\Carbon::now();
+                                                                    $diffInHours = $lastActivity->diffInHours($now);
+                                                                @endphp
+                                                                @if ($diffInHours < 1)
+                                                                    green; /* Attivo ora */
+                                                                @elseif ($diffInHours < 24)
+                                                                    yellow; /* Attivo da meno di un giorno */
+                                                                @else
+                                                                    red; /* Inattivo da più di un giorno */
+                                                                @endif
+                                                            @else
+                                                                red; /* Nessuna attività */
+                                                            @endif
+                                                        ">
+                                </span>
+                                <span class="text-sm text-gray-500">
+                                    @if ($last_activity)
+                                        @if ($diffInHours < 1)
+                                            Attivo ora
+                                        @elseif ($diffInHours < 24)
+                                            Attivo da {{ $diffInHours }} ore
+                                        @else
+                                            Inattivo da {{ $lastActivity->diffInDays($now) }} giorni
+                                        @endif
+                                    @else
+                                        Inattivo (Nessuna attività)
+                                    @endif
+                                </span>
+                            </div>
+                        </div>
+
+
                         @if ($post->image)
-                            <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="w-full h-48 object-cover">
+                            <img src="{{ asset('post_images/' . $post->image) }}" alt="{{ $post->title }}"
+                                class="w-full object-cover" style="aspect-ratio: 1/1;">
                         @endif
-                        <div class="p-6">
+                        <div class="p-3">
                             <h2 class="text-xl font-bold text-gray-800 mb-2">{{ $post->title }}</h2>
                             <p class="text-gray-600 mb-4">{{ Str::limit($post->description, 100, '...') }}</p>
-                            <p class="text-sm text-gray-500 mb-4">Autore: {{ $post->user->name }}</p>
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-2">
-                                    <form action="{{ route('posts.like', $post->id) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="flex items-center text-red-500 hover:text-red-600">
-                                            @if ($post->likes->where('user_id', Auth::id())->count())
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
-                                                </svg>
-                                                <span>{{ $post->likes->count() }}</span>
-                                            @else
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.172 5.172a4 4 0 015.656 0L12 8.343l3.172-3.171a4 4 0 115.656 5.656L12 21.657l-8.828-8.829a4 4 0 010-5.656z" />
-                                                </svg>
-                                                <span>{{ $post->likes->count() }}</span>
-                                            @endif
-                                        </button>
-                                    </form>
+                                    <div class="flex items-center space-x-2">
+                                        <form action="{{ route('posts.like', $post->id) }}" method="POST" class="like-form"
+                                            data-post-id="{{ $post->id }}">
+                                            @csrf
+                                            <button type="button"
+                                                class="like-button flex items-center text-red-500 hover:text-red-600 pr-3"
+                                                data-liked="{{ Auth::user()->likes->where('post_id', $post->id)->count() ? 'true' : 'false' }}">
+                                                <i
+                                                    class="pr-1 {{ Auth::user()->likes->where('post_id', $post->id)->count() ? 'fas fa-heart' : 'far fa-heart' }}"></i>
+                                                <span class="like-count">{{ $post->likes->count() }}</span>
+                                            </button>
+                                        </form>
 
-                                    <form action="{{ route('posts.save', $post->id) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="flex items-center text-blue-500 hover:text-blue-600">
-                                            @if (Auth::user()->savedPosts->contains($post->id))
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M5 3a2 2 0 00-2 2v12l7-3 7 3V5a2 2 0 00-2-2H5z" />
-                                                </svg>
-                                                <span>Salvato</span>
-                                            @else
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5v14l7-3 7 3V5a2 2 0 00-2-2H7a2 2 0 00-2 2z" />
-                                                </svg>
-                                                <span>Salva</span>
-                                            @endif
-                                        </button>
-                                    </form>
+                                        <form action="{{ route('posts.save', $post->id) }}" method="POST" class="save-form"
+                                            data-post-id="{{ $post->id }}">
+                                            @csrf
+                                            <button type="button"
+                                                class="save-button flex items-center text-blue-500 hover:text-blue-600"
+                                                data-saved="{{ Auth::user()->savedPosts->contains($post->id) ? 'true' : 'false' }}">
+                                                <i
+                                                    class="pr-1 {{ Auth::user()->savedPosts->contains($post->id) ? 'fas fa-bookmark' : 'far fa-bookmark' }}"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
 
                                 @if ($post->user_id == Auth::id())
                                     <div class="flex items-center space-x-2">
-                                        <a href="{{ route('posts.edit', $post->id) }}" class="text-yellow-500 hover:text-yellow-600">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M17.414 2.586a2 2 0 010 2.828L7.828 15H5v-2.828l9.586-9.586a2 2 0 012.828 0zM4 13v3h3l9.586-9.586-3-3L4 13z" />
-                                            </svg>
+                                        <a href="{{ route('posts.edit', $post->id) }}"
+                                            class="text-yellow-500 hover:text-yellow-600">
+                                            <i class="fas fa-edit"></i>
                                         </a>
-                                        <form action="{{ route('posts.destroy', $post->id) }}" method="POST" onsubmit="return confirm('Sei sicuro di voler eliminare questo post?');">
+                                        <form action="{{ route('posts.destroy', $post->id) }}" method="POST"
+                                            onsubmit="return confirm('Sei sicuro di voler eliminare questo post?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-500 hover:text-red-600">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v1H2v2h1v10a2 2 0 002 2h10a2 2 0 002-2V7h1V5h-2V4a2 2 0 00-2-2H6zm2 5a1 1 0 112 0 1 1 0 01-2 0zm3-3H7v1h4V4z" clip-rule="evenodd" />
-                                                </svg>
+                                                <i class="fas fa-trash-alt"></i>
                                             </button>
                                         </form>
                                     </div>
@@ -96,23 +123,78 @@
             </div>
         @else
             <div class="bg-gray-100 text-gray-700 p-4 rounded animate__animated animate__fadeIn">
-                Nessun post trovato. <a href="{{ route('posts.create') }}" class="text-blue-500 hover:underline">Crea un nuovo post</a>.
+                Nessun post trovato. <a href="{{ route('posts.create') }}" class="text-blue-500 hover:underline">Crea un
+                    nuovo post</a>.
             </div>
         @endif
 
         <!-- Pulsante per Creare Nuovo Post -->
         <div class="mt-8 text-center">
-            <a href="{{ route('posts.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <a href="{{ route('posts.create') }}"
+                class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
                 Crea Nuovo Post
             </a>
         </div>
     </div>
-@endsection
+    @endsection
 
-@push('scripts')
-    <!-- Alpine.js per interattività -->
+    @push('scripts')
     <script src="//unpkg.com/alpinejs" defer></script>
+    <script>
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const postId = this.closest('.like-form').getAttribute('data-post-id');
+                const isLiked = this.getAttribute('data-liked') === 'true';
+
+                fetch(`/posts/${postId}/like`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ liked: !isLiked })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Aggiorna l'icona e il contatore
+                        this.querySelector('i').className = isLiked ? 'far fa-heart' : 'fas fa-heart';
+                        this.querySelector('.like-count').innerText = data.likeCount;
+                        this.setAttribute('data-liked', !isLiked);
+                    }
+                });
+            });
+        });
+
+        document.querySelectorAll('.save-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const postId = this.closest('.save-form').getAttribute('data-post-id');
+                const isSaved = this.getAttribute('data-saved') === 'true';
+
+                fetch(`/posts/${postId}/save`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ saved: !isSaved })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Aggiorna l'icona e il testo
+                        this.querySelector('i').className = isSaved ? 'far fa-bookmark' : 'fas fa-bookmark';
+                        this.querySelector('.save-text').innerText = isSaved ? 'Salva' : 'Salvato';
+                        this.setAttribute('data-saved', !isSaved);
+                    }
+                });
+            });
+        });
+    </script>
 @endpush
+
+</x-app-layout>

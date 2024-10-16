@@ -38,8 +38,9 @@ class Post extends Model
     // Accessor per l'URL dell'immagine
     public function getImageUrlAttribute()
     {
-        return $this->image ? asset('storage/' . $this->image) : null;
+        return $this->image ? asset('post_images/' . $this->image) : null;
     }
+    
 
     // Metodo per aggiornare l'immagine del post
     public function updateImage($photo)
@@ -58,5 +59,12 @@ class Post extends Model
                 Storage::disk('public')->delete($previous);
             }
         });
+    }
+
+    public function getProfilePhotoUrlAttribute()
+    {
+        return $this->image
+            ? asset('post_images/' . $this->image)
+            : $this->defaultProfilePhotoUrl();
     }
 }

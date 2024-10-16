@@ -9,15 +9,37 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Recupera tutti i post con i loro autori e i like
-        $posts = Post::with('user', 'likes')->orderBy('created_at', 'desc')->paginate(10);
+        // Determina quale tipo di post visualizzare
+        $filter = $request->get('filter', 'all'); // Default a 'all'
+
+        // Recupera i post in base al filtro
+        if ($filter === 'liked') {
+            $posts = Post::with('user', 'likes')
+                ->whereHas('likes', function ($query) {
+                    $query->where('user_id', Auth::id());
+                })
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+        } elseif ($filter === 'saved') {
+            $posts = Post::with('user', 'savedByUsers') // Cambiato a savedByUsers
+                ->whereHas('savedByUsers', function ($query) {
+                    $query->where('user_id', Auth::id());
+                })
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+        } else {
+            $posts = Post::with('user', 'likes')->orderBy('created_at', 'desc')->paginate(10);
+        }
 
         // Recupera le ultime attività di tutti gli utenti
-        $userSessions = \DB::table('sessions')->get()->keyBy('user_id');
+        $userSessions = \DB::table('sessions')
+            ->select('user_id', 'last_activity', 'ip_address', 'user_agent')
+            ->whereNotNull('user_id')
+            ->get();
 
-        return view('dashboard', compact('posts', 'userSessions'));
+        return view('dashboard', compact('posts', 'userSessions', 'filter'));
     }
 
     // Toggle like

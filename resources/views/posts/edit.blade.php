@@ -130,12 +130,17 @@
                     </div>
 
                     <!-- Image Input -->
-                    <div class="mb-4">
-                        <label for="image" class="label-style">Immagine</label>
-                        <input type="file" id="image" name="image" accept="image/*"
-                            class="block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring sm:text-sm"
-                            @change="preview($event)">
-                    </div>
+<div class="mb-4">
+    <label for="image" class="label-style">Immagine</label>
+    <input type="file" id="image" name="image" accept="image/*"
+        class="block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring sm:text-sm"
+        @change="preview($event)">
+    <!-- Messaggio di errore -->
+    <template x-if="error">
+        <p class="mt-2 text-sm text-red-600" x-text="error"></p>
+    </template>
+</div>
+
 
                     <div class="flex items-center justify-between mt-6">
                         <a href="{{ route('posts.index') }}" class="btn btn-cancel btn-secondary">Annulla</a>
@@ -150,24 +155,33 @@
     @push('scripts')
         <script src="//unpkg.com/alpinejs" defer></script>
         <script>
-            function imagePreview() {
-                return {
-                    imageUrl: null,
-                    preview(event) {
-                        const file = event.target.files[0];
-                        if (file && file.type.startsWith('image/')) {
-                            const reader = new FileReader();
-                            reader.onload = (e) => {
-                                this.imageUrl = e.target.result;
-                            };
-                            reader.readAsDataURL(file);
-                        } else {
-                            this.imageUrl = null;
-                        }
+    function imagePreview() {
+        return {
+            imageUrl: null,
+            error: null, // Aggiungiamo una proprietà per gestire l'errore
+            preview(event) {
+                const file = event.target.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    if (file.size > 2 * 1024 * 1024) { // Controlliamo se il file supera 2MB
+                        this.error = 'L\'immagine è troppo grande (massimo 2MB).';
+                        // Non aggiorniamo imageUrl per mantenere l'immagine attuale
+                    } else {
+                        this.error = null; // Resettiamo l'errore se il file va bene
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.imageUrl = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
                     }
+                } else {
+                    this.error = null; // Resettiamo l'errore se non è un'immagine valida
+                    this.imageUrl = null;
                 }
             }
-        </script>
+        }
+    }
+</script>
+
     @endpush
 
 </x-app-layout>

@@ -67,13 +67,18 @@
                     @csrf
 
                     <!-- Placeholder Image -->
-                    <div class="mb-4 placeholder-image" x-show="!imageUrl"></div>
+                    <div class="mb-4 placeholder-image" x-show="!imageUrl && !error"></div>
 
                     <!-- Image Preview -->
                     <div class="mb-4" x-show="imageUrl">
                         <img x-bind:src="imageUrl" alt="Anteprima Immagine" style="aspect-ratio: 1/1;"
                             class="w-full object-cover rounded-md shadow-md border" />
                     </div>
+
+                    <!-- Messaggio di errore -->
+                    <template x-if="error">
+                        <p class="mb-4 text-sm text-red-600" x-text="error"></p>
+                    </template>
 
                     <div class="mb-4">
                         <label for="title" class="label-style">Titolo</label>
@@ -94,11 +99,15 @@
                         <input type="file" id="image" name="image" accept="image/*"
                             class="block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring sm:text-sm"
                             @change="preview($event)">
+
+                        <template x-if="error">
+                            <p class="mt-2 text-sm text-red-600" x-text="error"></p>
+                        </template>
                     </div>
 
                     <div class="flex items-center justify-between mt-6">
-                        <a href="{{ route('posts.index') }}" class="btn-cancel">Annulla</a>
-                        <button type="submit" class="btn-save">Crea Post</button>
+                        <a href="{{ route('posts.index') }}" class="btn-cancel btn-secondary">Annulla</a>
+                        <button type="submit" class="btn-save btn-primary">Crea Post</button>
                     </div>
                 </form>
             </div>
@@ -111,15 +120,24 @@
             function imagePreview() {
                 return {
                     imageUrl: null,
+                    error: null, // Aggiunta della proprietà per l'errore
                     preview(event) {
                         const file = event.target.files[0];
                         if (file && file.type.startsWith('image/')) {
-                            const reader = new FileReader();
-                            reader.onload = (e) => {
-                                this.imageUrl = e.target.result;
-                            };
-                            reader.readAsDataURL(file);
+                            if (file.size > 2 * 1024 * 1024) { // Verifica se il file supera i 2MB
+                                this.error = 'L\'immagine è troppo grande (massimo 2MB).';
+                                // Non aggiorniamo imageUrl per mantenere l'immagine placeholder
+                                this.imageUrl = null;
+                            } else {
+                                this.error = null; // Reset dell'errore se il file va bene
+                                const reader = new FileReader();
+                                reader.onload = (e) => {
+                                    this.imageUrl = e.target.result;
+                                };
+                                reader.readAsDataURL(file);
+                            }
                         } else {
+                            this.error = 'Seleziona un\'immagine valida.';
                             this.imageUrl = null;
                         }
                     }

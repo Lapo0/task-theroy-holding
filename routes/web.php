@@ -32,7 +32,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         return view('dashboard');
     })->name('dashboard');
     
-    Route::resource('posts', PostController::class);
+    Route::resource('posts', controller: PostController::class);
 
     Route::post('posts/{post}/like', [PostController::class, 'toggleLike'])->name('posts.like');
     Route::post('posts/{post}/save', [PostController::class, 'toggleSave'])->name('posts.save');

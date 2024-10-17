@@ -37,44 +37,45 @@
                             class="bg-white p-4 shadow-md rounded-lg overflow-hidden animate__animated animate__fadeInUp hover:shadow-xl transition-shadow duration-300">
                             <div class="flex items-center justify-between pb-2">
                                 <div class="flex items-center">
-                                <img src="{{ $post->user->profile_photo_path
-                                            ? asset('profile-photos/' . $post->user->profile_photo_path)
-                                            : asset('profile-photos/default.png') }}" alt="{{ $post->user->name }}"
-                                    class="w-5 h-5 rounded-full object-cover mr-2">
+                                    <img src="{{ $post->user->profile_photo_path
+                        ? asset('profile-photos/' . $post->user->profile_photo_path)
+                        : asset('profile-photos/default.png') }}" alt="{{ $post->user->name }}"
+                                        class="w-5 h-5 rounded-full object-cover mr-2">
                                     <span class="text-sm font-semibold text-gray-800">{{ $post->user->name }}</span>
                                 </div>
                                 <div class="flex items-center">
                                     <span class="h-3 w-3 rounded-full mr-2" style="
-                                                                    background-color: 
-                                                                    @php
-                                                                        $last_activity = $userSessions[$post->user_id]->last_activity ?? null;
-                                                                        if ($last_activity) {
-                                                                            $lastActivity = \Carbon\Carbon::createFromTimestamp($last_activity);
-                                                                            $now = \Carbon\Carbon::now();
-                                                                            $diffInHours = $lastActivity->diffInHours($now);
-                                                                        }
-                                                                    @endphp
-                                                                    @if ($last_activity)
-                                                                            @if ($diffInHours < 1) green; 
-                                                                            @elseif ($diffInHours < 24) yellow; 
-                                                                                @else red; 
-                                                                            @endif
-                                                                        @else red; 
-                                                                    @endif
-                                                                ">
+                                                                                                        background-color: 
+                                                                                                        @php
+                                                                                                            $last_activity = $userSessions[$post->user_id]->last_activity ?? null;
+                                                                                                            if ($last_activity) {
+                                                                                                                $lastActivity = \Carbon\Carbon::createFromTimestamp($last_activity);
+                                                                                                                $now = \Carbon\Carbon::now();
+                                                                                                                $diffInHours = $lastActivity->diffInHours($now);
+                                                                                                            }
+                                                                                                        @endphp
+                                                                                                        @if ($last_activity)
+                                                                                                                @if ($diffInHours < 1) green; 
+                                                                                                                @elseif ($diffInHours < 24) yellow; 
+                                                                                                                    @else red; 
+                                                                                                                @endif
+                                                                                                            @else red; 
+                                                                                                        @endif
+                                                                                                    ">
                                     </span>
                                     <span class="text-sm text-gray-500">
                                         @if ($last_activity)
                                             @if ($diffInHours < 1)
                                                 Attivo ora
                                             @elseif ($diffInHours < 24)
-                                                Attivo da {{ $diffInHours }} ore
+                                                Attivo {{ floor($diffInHours) }} ore fa
                                             @else
                                                 Inattivo da {{ $lastActivity->diffInDays($now) }} giorni
                                             @endif
                                         @else
                                             Inattivo
                                         @endif
+
                                     </span>
                                 </div>
                             </div>

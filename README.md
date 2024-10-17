@@ -54,10 +54,8 @@ Per installare e utilizzare questo progetto, è necessario avere una configurazi
    ```bash
    php artisan key:generate
    ```
-6. Esegui le migrazioni per creare il database:
-   ```bash
-   php artisan migrate
-   ```
+6. Importa il database da query SQL
+
 7. Avvia il server locale:
    ```bash
    php artisan serve
